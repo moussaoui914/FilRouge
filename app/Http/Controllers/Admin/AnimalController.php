@@ -8,80 +8,84 @@ use App\Models\Habitat;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Storage;
 
 class AnimalController extends Controller
 {
-    
     public function index(): View
     {
-        $animals = Animal::with('habitat')
-            ->latest()
-            ->paginate(10);
-
+        $animals = Animal::with('habitat')->latest()->paginate(15);
         return view('admin.animals.index', compact('animals'));
     }
 
-    
     public function create(): View
     {
-        $habitats = Habitat::orderBy('name')->get();
+        $habitats = Habitat::all();
         return view('admin.animals.create', compact('habitats'));
     }
-
 
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name'          => 'required|string|max:255',
-            'species'       => 'required|string|max:255',
-            'birth_date'    => 'nullable|date|before_or_equal:today',
+            'name' => 'required|string|max:255',
+            'species' => 'required|string|max:255',
+            'birth_date' => 'nullable|date',
             'health_status' => 'required|in:Excellent,Good,Fair,Poor,Critical',
-            'habitat_id'    => 'nullable|exists:habitats,id',
-            'description'   => 'nullable|string|max:2000',
+            'habitat_id' => 'nullable|exists:habitats,id',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('animals', 'public');
+            $validated['image'] = $path;
+        }
 
         Animal::create($validated);
 
         return redirect()->route('admin.animals.index')
-            ->with('success', 'Animal "' . $validated['name'] . '" added successfully!');
+            ->with('success', 'Animal created successfully.');
     }
 
-   
+    public function show(Animal $animal): View
+    {
+        $animal->load('habitat');
+        $veterinaryRecords = $animal->veterinaryRecords()->with('veterinarian')->latest()->take(5)->get();
+        return view('admin.animals.show', compact('animal', 'veterinaryRecords'));
+    }
+
     public function edit(Animal $animal): View
     {
-        $habitats = Habitat::orderBy('name')->get();
+        $habitats = Habitat::all();
         return view('admin.animals.edit', compact('animal', 'habitats'));
     }
 
-
-    public function update(Request $request, Animal $animal ): RedirectResponse
+    public function update(Request $request, Animal $animal): RedirectResponse
     {
         $validated = $request->validate([
-            'name'          => 'required|string|max:255',
-            'species'       => 'required|string|max:255',
-            'birth_date'    => 'nullable|date|before_or_equal:today',
+            'name' => 'required|string|max:255',
+            'species' => 'required|string|max:255',
+            'birth_date' => 'nullable|date',
             'health_status' => 'required|in:Excellent,Good,Fair,Poor,Critical',
-            'habitat_id'    => 'nullable|exists:habitats,id',
-            'description'   => 'nullable|string|max:2000',
+            'habitat_id' => 'nullable|exists:habitats,id',
+            'description' => 'nullable|string',
+            'image' => 'nullable|image|max:2048',
         ]);
 
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('animals', 'public');
+            $validated['image'] = $path;
+        }
 
         $animal->update($validated);
 
         return redirect()->route('admin.animals.index')
-            ->with('success', 'Animal "' . $animal->name . '" updated successfully!');
+            ->with('success', 'Animal updated successfully.');
     }
 
- 
-    public function destroy(Animal $animal) 
+    public function destroy(Animal $animal): RedirectResponse
     {
-        $name = $animal->name;
-
-
         $animal->delete();
-
         return redirect()->route('admin.animals.index')
-            ->with('success', 'Animal "' . $name . '" deleted successfully!');
+            ->with('success', 'Animal deleted successfully.');
     }
 }
