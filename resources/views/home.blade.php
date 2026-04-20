@@ -1,163 +1,242 @@
 @extends('layouts.app')
 
-@section('title', 'ZooQuarium — Zoo Management System')
+@section('title', 'ZooQuarium - Experience Wildlife')
 
 @section('content')
-
-{{-- ─── HERO ──────────────────────────────────────────────────────────────── --}}
-<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
-
-    {{-- Background --}}
-    <div class="absolute inset-0 z-0">
-        <img src="https://images.unsplash.com/photo-1534567153574-2b12153a87f0?w=1600&auto=format&fit=crop"
-             alt="Zoo background"
-             class="w-full h-full object-cover" />
-        <div class="absolute inset-0 bg-gradient-to-br from-zoo-900/85 via-zoo-900/70 to-stone-900/80"></div>
-    </div>
-
-    {{-- Decorative circles --}}
-    <div class="absolute top-32 right-16 w-64 h-64 bg-zoo-500/10 rounded-full blur-3xl"></div>
-    <div class="absolute bottom-24 left-10 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl"></div>
-
-    {{-- Content --}}
-    <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
-        <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur px-4 py-2 rounded-full text-zoo-100 text-sm font-medium mb-8 border border-white/20">
-            🌿 &nbsp; Welcome to ZooQuarium Management System
-        </div>
-
-        <h1 class="font-display font-black text-5xl sm:text-6xl lg:text-7xl text-white leading-tight mb-6">
-            Zoo Management<br/>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-zoo-300 to-amber-300">
-                System
-            </span>
-        </h1>
-
-        <p class="text-zoo-100/80 text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-            A powerful platform to manage animals, habitats, veterinary care, and visitors —
-            all in one streamlined dashboard.
-        </p>
-
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#animals"
-               class="inline-flex items-center gap-2 bg-zoo-600 hover:bg-zoo-500 text-white font-semibold px-8 py-4 rounded-xl transition-all shadow-lg shadow-zoo-900/30 hover:shadow-xl hover:-translate-y-0.5">
-                🐘 Explore Animals
-            </a>
-            <a href="#tickets"
-               class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur text-white font-semibold px-8 py-4 rounded-xl border border-white/30 transition-all hover:-translate-y-0.5">
-                🎟️ Buy Tickets
-            </a>
-        </div>
-
-        {{-- Scroll hint --}}
-        <div class="mt-16 animate-bounce">
-            <svg class="w-6 h-6 text-white/40 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-        </div>
-    </div>
-</section>
-
-{{-- ─── FEATURES ───────────────────────────────────────────────────────────── --}}
-<section id="animals" class="py-24 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        <div class="text-center mb-16">
-            <span class="text-zoo-600 font-semibold text-sm uppercase tracking-widest">What We Offer</span>
-            <h2 class="font-display text-4xl font-bold text-stone-900 mt-2">Powerful Features</h2>
-            <p class="text-stone-500 mt-3 max-w-xl mx-auto">Everything you need to run a modern, well-organized zoo operation.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-            @php
-                $features = [
-                    [
-                        'icon'  => '🐘',
-                        'title' => 'Animal Management',
-                        'desc'  => 'Track every animal — species, health status, birth dates, habitat assignments, and complete medical history with ease.',
-                        'color' => 'from-emerald-50 to-green-50',
-                        'badge' => 'text-emerald-700 bg-emerald-100',
-                    ],
-                    [
-                        'icon'  => '🩺',
-                        'title' => 'Veterinary Care',
-                        'desc'  => 'Schedule check-ups, record treatments, manage medications, and monitor health trends across your entire animal population.',
-                        'color' => 'from-blue-50 to-sky-50',
-                        'badge' => 'text-blue-700 bg-blue-100',
-                    ],
-                    [
-                        'icon'  => '🎟️',
-                        'title' => 'Ticketing System',
-                        'desc'  => 'Manage visitor tickets, track daily attendance, generate revenue reports, and control capacity effortlessly.',
-                        'color' => 'from-amber-50 to-orange-50',
-                        'badge' => 'text-amber-700 bg-amber-100',
-                    ],
-                ];
-            @endphp
-
-            @foreach($features as $f)
-                <div class="group relative bg-gradient-to-br {{ $f['color'] }} border border-stone-200 rounded-2xl p-8 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
-                    <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl {{ $f['badge'] }} text-2xl mb-6">
-                        {{ $f['icon'] }}
-                    </div>
-                    <h3 class="font-display text-xl font-bold text-stone-900 mb-3">{{ $f['title'] }}</h3>
-                    <p class="text-stone-600 leading-relaxed text-sm">{{ $f['desc'] }}</p>
+<div class="relative">
+    <!-- Hero Section -->
+    <div class="relative h-[600px] bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1549366021-9f761d450615?ixlib=rb-4.0.3');">
+        <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex items-center">
+            <div class="text-white">
+                <h1 class="text-5xl md:text-6xl font-bold mb-4">Welcome to ZooQuarium</h1>
+                <p class="text-xl md:text-2xl mb-8 max-w-2xl">Experience the magic of wildlife with over {{ $stats['animals'] }} animals in their natural habitats</p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#buy-tickets" class="bg-emerald-600 hover:bg-emerald-700 text-white px-8 py-3 rounded-lg font-semibold transition shadow-lg">
+                        Buy Tickets
+                    </a>
+                    <a href="{{ route('animals.public') }}" class="bg-white hover:bg-gray-100 text-gray-800 px-8 py-3 rounded-lg font-semibold transition shadow-lg">
+                        Explore Animals
+                    </a>
                 </div>
-            @endforeach
+            </div>
         </div>
     </div>
-</section>
 
-{{-- ─── STATISTICS ─────────────────────────────────────────────────────────── --}}
-<section class="py-20 bg-zoo-900 relative overflow-hidden" id="habitats">
-    <div class="absolute inset-0 opacity-10">
-        <div class="absolute top-0 left-1/4 w-96 h-96 bg-zoo-400 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-0 right-1/4 w-64 h-64 bg-amber-400 rounded-full blur-3xl"></div>
-    </div>
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div class="text-center mb-14">
-            <span class="text-zoo-300 font-semibold text-sm uppercase tracking-widest">By The Numbers</span>
-            <h2 class="font-display text-4xl font-bold text-white mt-2">Our Zoo At a Glance</h2>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-8">
-            @php
-                $stats_display = [
-                    ['value' => number_format($stats['animals']),  'label' => 'Animals',       'icon' => '🐘', 'suffix' => '+'],
-                    ['value' => number_format($stats['habitats']), 'label' => 'Habitats',      'icon' => '🌿', 'suffix' => ''],
-                    ['value' => number_format($stats['visitors']), 'label' => 'Annual Visitors','icon' => '👥', 'suffix' => '+'],
-                ];
-            @endphp
-
-            @foreach($stats_display as $s)
-                <div class="text-center group">
-                    <div class="text-4xl mb-4">{{ $s['icon'] }}</div>
-                    <div class="font-display text-5xl font-black text-white mb-2">
-                        {{ $s['value'] }}<span class="text-zoo-400">{{ $s['suffix'] }}</span>
-                    </div>
-                    <div class="text-zoo-200/70 font-medium">{{ $s['label'] }}</div>
+    <!-- Stats Section -->
+    <div class="bg-white py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-emerald-600 mb-2">{{ $stats['animals'] }}+</div>
+                    <div class="text-gray-600 font-medium">Amazing Animals</div>
                 </div>
-            @endforeach
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-emerald-600 mb-2">{{ $stats['habitats'] }}</div>
+                    <div class="text-gray-600 font-medium">Natural Habitats</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-emerald-600 mb-2">{{ number_format($stats['visitors']) }}+</div>
+                    <div class="text-gray-600 font-medium">Happy Visitors</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-5xl font-bold text-emerald-600 mb-2">{{ $stats['tickets_sold'] ?? 0 }}</div>
+                    <div class="text-gray-600 font-medium">Tickets Sold</div>
+                </div>
+            </div>
         </div>
     </div>
-</section>
 
-{{-- ─── TICKETS CTA ─────────────────────────────────────────────────────────── --}}
-<section id="tickets" class="py-24 bg-gradient-to-br from-amber-50 to-orange-50">
-    <div class="max-w-4xl mx-auto text-center px-4">
-        <span class="text-amber-600 font-semibold text-sm uppercase tracking-widest">Plan Your Visit</span>
-        <h2 class="font-display text-4xl font-bold text-stone-900 mt-2 mb-4">Ready to Visit?</h2>
-        <p class="text-stone-600 text-lg mb-10">Book your tickets online and enjoy a world-class wildlife experience for the whole family.</p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <a href="#" class="bg-amber-500 hover:bg-amber-600 text-white font-semibold px-10 py-4 rounded-xl transition-all shadow-lg shadow-amber-200">
-                🎟️ Buy Tickets Now
-            </a>
-            <a href="#" class="bg-white border border-stone-200 hover:bg-stone-50 text-stone-800 font-semibold px-10 py-4 rounded-xl transition-all">
-                Learn More
-            </a>
+    <!-- Buy Tickets Section -->
+    <div id="buy-tickets" class="py-16 bg-gradient-to-r from-emerald-50 to-teal-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-4">Book Your Visit Today</h2>
+                <p class="text-gray-600 text-lg">Choose from our range of ticket options</p>
+            </div>
+
+            <!-- Ticket Types Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-12">
+                <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Adult</h3>
+                    <p class="text-2xl font-bold text-emerald-600">€15</p>
+                    <p class="text-sm text-gray-500 mt-2">Ages 13-64</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Child</h3>
+                    <p class="text-2xl font-bold text-emerald-600">€8</p>
+                    <p class="text-sm text-gray-500 mt-2">Ages 3-12</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Senior</h3>
+                    <p class="text-2xl font-bold text-emerald-600">€12</p>
+                    <p class="text-sm text-gray-500 mt-2">Ages 65+</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">Group</h3>
+                    <p class="text-2xl font-bold text-emerald-600">€10</p>
+                    <p class="text-sm text-gray-500 mt-2">10+ people</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6 text-center hover:shadow-lg transition">
+                    <div class="w-12 h-12 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                        </svg>
+                    </div>
+                    <h3 class="font-bold text-lg mb-2">VIP</h3>
+                    <p class="text-2xl font-bold text-amber-600">€35</p>
+                    <p class="text-sm text-gray-500 mt-2">Premium experience</p>
+                </div>
+            </div>
+
+            <!-- Purchase Form -->
+            <div class="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+                <h3 class="text-2xl font-bold text-gray-900 mb-6 text-center">Purchase Your Tickets</h3>
+                
+                <form action="{{ route('tickets.purchase') }}" method="POST">
+                    @csrf
+                    <div class="space-y-5">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Full Name *</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                    </svg>
+                                </div>
+                                <input type="text" name="visitor_name" required
+                                       class="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                       placeholder="Your full name">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email Address *</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                                <input type="email" name="visitor_email" required
+                                       class="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                                       placeholder="you@example.com">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Ticket Type *</label>
+                            <select name="ticket_type" required 
+                                    class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                                <option value="adult">Adult - €15.00</option>
+                                <option value="child">Child (3-12) - €8.00</option>
+                                <option value="senior">Senior (65+) - €12.00</option>
+                                <option value="group">Group (10+ people) - €10.00 each</option>
+                                <option value="vip">VIP Experience - €35.00</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Visit Date *</label>
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                </div>
+                                <input type="date" name="visit_date" required min="{{ date('Y-m-d') }}"
+                                       class="w-full pl-9 pr-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent">
+                            </div>
+                        </div>
+
+                        <div class="bg-gray-50 rounded-lg p-4 space-y-2">
+                            <div class="flex items-center text-sm text-gray-600">
+                                <svg class="w-4 h-4 text-emerald-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Instant ticket delivery via email
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <svg class="w-4 h-4 text-emerald-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Free cancellation up to 24 hours before
+                            </div>
+                            <div class="flex items-center text-sm text-gray-600">
+                                <svg class="w-4 h-4 text-emerald-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                QR code for contactless entry
+                            </div>
+                        </div>
+
+                        <button type="submit" 
+                                class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-lg transition shadow-md">
+                            Purchase Ticket
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</section>
 
+    <!-- Featured Animals Section -->
+    <div class="py-16 bg-gray-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-900 mb-2">Meet Our Animals</h2>
+                <p class="text-gray-600">Discover our incredible wildlife collection</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                @php
+                    $featuredAnimals = App\Models\Animal::with('habitat')->take(3)->get();
+                @endphp
+                @foreach($featuredAnimals as $animal)
+                <div class="group bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition">
+                    @if($animal->image)
+                        <img src="{{ Storage::url($animal->image) }}" alt="{{ $animal->name }}" class="w-full h-56 object-cover group-hover:scale-105 transition duration-300">
+                    @else
+                        <div class="w-full h-56 bg-gradient-to-br from-emerald-100 to-teal-100 flex items-center justify-center">
+                            <svg class="w-16 h-16 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                            </svg>
+                        </div>
+                    @endif
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-gray-800 mb-1">{{ $animal->name }}</h3>
+                        <p class="text-emerald-600 font-medium mb-2">{{ $animal->species }}</p>
+                        <p class="text-sm text-gray-500">Habitat: {{ $animal->habitat->name ?? 'Unknown' }}</p>
+                        <a href="{{ route('animals.public.show', $animal) }}" class="mt-4 inline-flex items-center text-emerald-600 font-semibold hover:text-emerald-700 transition">
+                            Learn More
+                            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
 @endsection

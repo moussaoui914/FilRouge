@@ -88,4 +88,18 @@ class AnimalController extends Controller
         return redirect()->route('admin.animals.index')
             ->with('success', 'Animal deleted successfully.');
     }
+
+    public function publicIndex(): View
+{
+    $animals = Animal::with('habitat')->paginate(12);
+    return view('animals.public-index', compact('animals'));
+}
+
+public function publicShow(Animal $animal): View
+{
+    $animal->load('habitat');
+    $veterinaryRecords = $animal->veterinaryRecords()->with('veterinarian')->latest()->take(5)->get();
+    return view('animals.public-show', compact('animal', 'veterinaryRecords'));
+}
+
 }

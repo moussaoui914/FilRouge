@@ -58,5 +58,25 @@ class User extends Authenticatable
         return $this->role === 'maintenance';
     }
 
+    public function veterinaryRecords()
+    {
+        return $this->hasMany(VeterinaryRecord::class, 'veterinarian_id');
+    }
+
+    public function schedules()
+    {
+        return $this->hasMany(StaffSchedule::class);
+    }
+
+    public function maintenanceRecords()
+    {
+        return $this->hasMany(MaintenanceRecord::class, 'maintainer_id');
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
 
 }

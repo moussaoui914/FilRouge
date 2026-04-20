@@ -81,4 +81,16 @@ class HabitatController extends Controller
         return redirect()->route('admin.habitats.index')
             ->with('success', 'Habitat deleted successfully.');
     }
+
+        public function publicIndex(): View
+    {
+        $habitats = Habitat::withCount('animals')->paginate(12);
+        return view('habitats.public-index', compact('habitats'));
+    }
+
+    public function publicShow(Habitat $habitat): View
+    {
+        $habitat->load('animals');
+        return view('habitats.public-show', compact('habitat'));
+    }
 }

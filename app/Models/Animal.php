@@ -46,4 +46,10 @@ class Animal extends Model
             default     => 'gray',
         };
     }
+
+    public function veterinaryRecords(){
+        return $this->hasMany(VeterinaryRecord::class);
+    }
+
+
 }

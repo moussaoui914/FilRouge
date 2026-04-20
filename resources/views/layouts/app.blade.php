@@ -1,188 +1,176 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ mobileMenuOpen: false }">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>@yield('title', 'ZooQuarium — Zoo Management System')</title>
-
-    {{-- Tailwind CSS CDN --}}
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    {{-- Alpine.js --}}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title', 'ZooQuarium - Zoo Management System')</title>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
-    {{-- Google Fonts --}}
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        display: ['"Playfair Display"', 'serif'],
-                        body:    ['"DM Sans"', 'sans-serif'],
-                    },
-                    colors: {
-                        zoo: {
-                            50:  '#f0fdf4',
-                            100: '#dcfce7',
-                            400: '#4ade80',
-                            500: '#22c55e',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
-                        },
-                        amber: {
-                            400: '#fbbf24',
-                            500: '#f59e0b',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'DM Sans', sans-serif; }
-        .font-display { font-family: 'Playfair Display', serif; }
+        * { font-family: 'Inter', sans-serif; }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
     </style>
-
     @stack('styles')
 </head>
-<body class="bg-stone-50 text-stone-800 antialiased">
-
-    {{-- ─── Navbar ─────────────────────────────────────────────────────────── --}}
-    <nav x-data="{ open: false }" class="fixed top-0 inset-x-0 z-50 bg-white/90 backdrop-blur border-b border-stone-200">
+<body class="bg-gray-50 antialiased">
+    
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-
-                {{-- Logo --}}
-                <a href="{{ route('home') }}" class="flex items-center gap-2 group">
-                    <span class="text-2xl">🦁</span>
-                    <span class="font-display font-bold text-xl text-zoo-800 group-hover:text-zoo-600 transition-colors">
-                        ZooQuarium
-                    </span>
-                </a>
-
-                {{-- Desktop Links --}}
-                <div class="hidden md:flex items-center gap-8">
-                    <a href="{{ route('home') }}"    class="text-sm font-medium text-stone-600 hover:text-zoo-700 transition-colors">Home</a>
-                    <a href="#animals"              class="text-sm font-medium text-stone-600 hover:text-zoo-700 transition-colors">Animals</a>
-                    <a href="#habitats"             class="text-sm font-medium text-stone-600 hover:text-zoo-700 transition-colors">Habitats</a>
-                    <a href="#tickets"              class="text-sm font-medium text-stone-600 hover:text-zoo-700 transition-colors">Tickets</a>
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <a href="{{ route('home') }}" class="flex items-center space-x-2">
+                        <span class="text-2xl font-bold bg-gradient-to-r from-emerald-700 to-emerald-900 bg-clip-text text-transparent">ZooQuarium</span>
+                    </a>
+                    <div class="hidden md:flex ml-10 space-x-8">
+                        <a href="{{ route('home') }}" class="text-gray-700 hover:text-emerald-700 px-3 py-2 text-sm font-medium transition">Home</a>
+                        <a href="{{ route('animals.public') }}" class="text-gray-700 hover:text-emerald-700 px-3 py-2 text-sm font-medium transition">Animals</a>
+                        <a href="{{ route('habitats.public') }}" class="text-gray-700 hover:text-emerald-700 px-3 py-2 text-sm font-medium transition">Habitats</a>
+                        @auth
+                            @if(auth()->user()->isAdmin())
+                                <a href="{{ route('admin.dashboard') }}" class="text-emerald-700 hover:text-emerald-800 px-3 py-2 text-sm font-medium transition">Dashboard</a>
+                            @endif
+                            @if(auth()->user()->isSoigneur() || auth()->user()->isVeterinaire() || auth()->user()->isMaintenance() || auth()->user()->isResponsable())
+                                <a href="{{ route('staff.my-schedule') }}" class="text-gray-700 hover:text-emerald-700 px-3 py-2 text-sm font-medium transition">
+                                    My Schedule
+                                </a>
+                            @endif
+                            @if(auth()->user()->isVeterinaire())
+                                <a href="{{ route('veterinary.index') }}" class="text-gray-700 hover:text-emerald-700 px-3 py-2 text-sm font-medium transition">
+                                    Veterinary
+                                </a>
+                            @endif
+                            @if(auth()->user()->isMaintenance())
+                                <a href="{{ route('maintenance.my-tasks') }}" class="text-gray-700 hover:text-emerald-700 px-3 py-2 text-sm font-medium transition">
+                                    My Tasks
+                                </a>
+                            @endif
+                            @if(auth()->user()->isBilletterie())
+                                <a href="{{ route('billetterie.dashboard') }}" class="text-gray-700 hover:text-emerald-700 px-3 py-2 text-sm font-medium transition">
+                                    Ticket Desk
+                                </a>
+                            @endif
+                        @endauth
+                    </div>
                 </div>
-
-                {{-- Auth Buttons --}}
-                <div class="hidden md:flex items-center gap-3">
+                <div class="flex items-center space-x-4">
                     @auth
-                        @if(auth()->user()->isAdmin())
-                            <a href="{{ route('admin.dashboard') }}"
-                               class="text-sm font-medium text-zoo-700 hover:text-zoo-900">Admin Panel</a>
-                        @endif
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit"
-                                class="text-sm font-medium bg-stone-100 hover:bg-stone-200 px-4 py-2 rounded-lg transition-colors">
-                                Logout
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = !open" class="flex items-center space-x-2 focus:outline-none">
+                                <div class="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                                    <span class="text-emerald-700 font-semibold">{{ substr(auth()->user()->name, 0, 1) }}</span>
+                                </div>
+                                <span class="text-sm text-gray-700 hidden md:inline">{{ auth()->user()->name }}</span>
+                                <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                                </svg>
                             </button>
-                        </form>
+                            <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10">
+                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                                <a href="{{ route('tickets.my') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Tickets</a>
+                                <hr class="my-1">
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Logout</button>
+                                </form>
+                            </div>
+                        </div>
                     @else
-                        <a href="{{ route('login') }}"
-                           class="text-sm font-medium text-stone-600 hover:text-zoo-700 transition-colors px-4 py-2">
-                            Login
-                        </a>
-                        <a href="{{ route('register') }}"
-                           class="text-sm font-semibold bg-zoo-700 hover:bg-zoo-800 text-white px-5 py-2 rounded-lg transition-colors shadow-sm">
-                            Register
-                        </a>
+                        <a href="{{ route('login') }}" class="text-gray-700 hover:text-emerald-700 px-3 py-2 text-sm font-medium">Login</a>
+                        <a href="{{ route('register') }}" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700 transition">Register</a>
                     @endauth
                 </div>
-
-                {{-- Mobile Toggle --}}
-                <button @click="open = !open" class="md:hidden p-2 rounded-lg hover:bg-stone-100">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-                        <path x-show="open"  stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                </button>
             </div>
-        </div>
-
-        {{-- Mobile Menu --}}
-        <div x-show="open" x-transition class="md:hidden bg-white border-t border-stone-100 px-4 py-4 space-y-2">
-            <a href="{{ route('home') }}"   class="block py-2 text-stone-700 font-medium">Home</a>
-            <a href="#animals"              class="block py-2 text-stone-700 font-medium">Animals</a>
-            <a href="#habitats"             class="block py-2 text-stone-700 font-medium">Habitats</a>
-            <a href="#tickets"              class="block py-2 text-stone-700 font-medium">Tickets</a>
-            <hr class="border-stone-200 my-2">
-            @guest
-                <a href="{{ route('login') }}"    class="block py-2 text-stone-700 font-medium">Login</a>
-                <a href="{{ route('register') }}" class="block py-2 text-zoo-700 font-semibold">Register</a>
-            @else
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit" class="block py-2 text-stone-700 font-medium">Logout</button>
-                </form>
-            @endguest
         </div>
     </nav>
 
-    {{-- Flash Messages --}}
+    <!-- Flash Messages -->
     @if(session('success'))
-        <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 4000)"
-             class="fixed top-20 right-4 z-50 bg-green-50 border border-green-200 text-green-800 px-5 py-3 rounded-xl shadow-lg flex items-center gap-3">
-            <span>✅</span>
-            <span class="text-sm font-medium">{{ session('success') }}</span>
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" class="fixed top-20 right-4 z-50">
+            <div class="bg-emerald-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>{{ session('success') }}</span>
+            </div>
         </div>
     @endif
 
     @if(session('error'))
-        <div x-data="{ show: true }" x-show="show" x-transition x-init="setTimeout(() => show = false, 5000)"
-             class="fixed top-20 right-4 z-50 bg-red-50 border border-red-200 text-red-800 px-5 py-3 rounded-xl shadow-lg flex items-center gap-3">
-            <span>❌</span>
-            <span class="text-sm font-medium">{{ session('error') }}</span>
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)" class="fixed top-20 right-4 z-50">
+            <div class="bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center space-x-2">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <span>{{ session('error') }}</span>
+            </div>
         </div>
     @endif
 
-    {{-- Main Content --}}
-    <main class="pt-16">
+    <!-- Main Content -->
+    <main>
         @yield('content')
     </main>
 
-    {{-- ─── Footer ──────────────────────────────────────────────────────────── --}}
-    <footer class="bg-zoo-900 text-white mt-24">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 grid grid-cols-1 md:grid-cols-3 gap-10">
-            <div>
-                <div class="flex items-center gap-2 mb-4">
-                    <span class="text-2xl">🦁</span>
-                    <span class="font-display font-bold text-xl">ZooQuarium</span>
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white mt-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <span class="text-2xl font-bold">ZooQuarium</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">Experience wildlife like never before. A world of wonder awaits.</p>
                 </div>
-                <p class="text-zoo-100/70 text-sm leading-relaxed">
-                    A comprehensive zoo management system for modern wildlife sanctuaries.
-                </p>
-            </div>
-            <div>
-                <h4 class="font-semibold mb-4 text-zoo-100">Contact</h4>
-                <ul class="space-y-2 text-sm text-zoo-100/70">
-                    <li>📧 contact@zooquarium.com</li>
-                    <li>📞 +1 (555) 123-4567</li>
-                    <li>📍 123 Wildlife Ave, Nature City</li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="font-semibold mb-4 text-zoo-100">Follow Us</h4>
-                <div class="flex gap-4">
-                    <a href="#" class="text-zoo-100/60 hover:text-white transition-colors text-sm">Twitter</a>
-                    <a href="#" class="text-zoo-100/60 hover:text-white transition-colors text-sm">Facebook</a>
-                    <a href="#" class="text-zoo-100/60 hover:text-white transition-colors text-sm">Instagram</a>
+                <div>
+                    <h4 class="font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li><a href="{{ route('animals.public') }}" class="hover:text-white transition">Animals</a></li>
+                        <li><a href="{{ route('habitats.public') }}" class="hover:text-white transition">Habitats</a></li>
+                        <li><a href="#buy-tickets" class="hover:text-white transition">Tickets</a></li>
+                        <li><a href="#" class="hover:text-white transition">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Visit Us</h4>
+                    <ul class="space-y-2 text-sm text-gray-400">
+                        <li>123 Zoo Avenue</li>
+                        <li>Wildlife City, WC 12345</li>
+                        <li>Open daily: 9AM - 6PM</li>
+                        <li>Phone: +1 234 567 890</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.398.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-white transition">
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/>
+                            </svg>
+                        </a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="border-t border-zoo-800 py-5 text-center text-xs text-zoo-100/40">
-            &copy; {{ date('Y') }} ZooQuarium — All rights reserved.
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-500">
+                &copy; {{ date('Y') }} ZooQuarium. All rights reserved.
+            </div>
         </div>
     </footer>
 
