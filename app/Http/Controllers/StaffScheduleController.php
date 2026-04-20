@@ -6,6 +6,7 @@ use App\Models\StaffSchedule;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class StaffScheduleController extends Controller
 {
@@ -77,5 +78,75 @@ class StaffScheduleController extends Controller
         $schedule->delete();
         return redirect()->route('staff.schedules.index')
             ->with('success', 'Schedule deleted successfully.');
+    }
+
+    /**
+     * Display the current user's schedule (my schedule)
+     */
+    public function mySchedule(): View
+    {
+        $schedules = StaffSchedule::where('user_id', Auth::id())
+            ->whereDate('date', '>=', now())
+            ->orderBy('date')
+            ->orderBy('shift_start')
+            ->paginate(10);
+        
+        return view('staff.my-schedule', compact('schedules'));
+    }
+
+    /**
+     * Dashboard for staff members
+     */
+    public function dashboard(): View
+    {
+        $upcomingSchedules = StaffSchedule::where('user_id', Auth::id())
+            ->whereDate('date', '>=', now())
+            ->orderBy('date')
+            ->orderBy('shift_start')
+            ->take(5)
+            ->get();
+        
+        $todaySchedule = StaffSchedule::where('user_id', Auth::id())
+            ->whereDate('date', today())
+            ->first();
+        
+        $completedShifts = StaffSchedule::where('user_id', Auth::id())
+            ->where('status', 'completed')
+            ->count();
+        
+        $pendingShifts = StaffSchedule::where('user_id', Auth::id())
+            ->whereIn('status', ['scheduled', 'in_progress'])
+            ->count();
+        
+        return view('staff.dashboard', compact('upcomingSchedules', 'todaySchedule', 'completedShifts', 'pendingShifts'));
+    }
+
+    /**
+     * Display tasks for the current user
+     */
+    public function tasks(): View
+    {
+        $tasks = StaffSchedule::where('user_id', Auth::id())
+            ->where('status', '!=', 'completed')
+            ->whereDate('date', '>=', now())
+            ->orderBy('date')
+            ->orderBy('shift_start')
+            ->paginate(10);
+        
+        return view('staff.tasks', compact('tasks'));
+    }
+
+    /**
+     * Mark a task as completed
+     */
+    public function completeTask(StaffSchedule $schedule)
+    {
+        if ($schedule->user_id !== Auth::id() && !Auth::user()->isAdmin()) {
+            return back()->with('error', 'You are not authorized to complete this task.');
+        }
+        
+        $schedule->update(['status' => 'completed']);
+        
+        return back()->with('success', 'Task marked as completed successfully.');
     }
 }

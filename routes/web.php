@@ -65,11 +65,14 @@ Route::prefix('veterinary')
     });
 
 // ==================== ROUTES PERSONNEL (Soigneurs) ====================
+// Staff routes
 Route::prefix('staff')
     ->name('staff.')
     ->middleware(['auth'])
     ->group(function () {
-        Route::resource('schedules', StaffScheduleController::class);
+        Route::get('/dashboard', [StaffScheduleController::class, 'dashboard'])->name('dashboard');
         Route::get('/my-schedule', [StaffScheduleController::class, 'mySchedule'])->name('my-schedule');
+        Route::get('/tasks', [StaffScheduleController::class, 'tasks'])->name('tasks');
+        Route::post('/tasks/{schedule}/complete', [StaffScheduleController::class, 'completeTask'])->name('tasks.complete');
+        Route::resource('schedules', StaffScheduleController::class);
     });
-
